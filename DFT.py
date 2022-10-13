@@ -20,7 +20,7 @@ if __name__ == "__main__":
     # Pre-compute w, F_N, and the "normalized" Fourier matrix norm_F_N here (since we might use them a lot below)
     w = prim_Nth_root(N)
     F_N = Fourier_matrix(N)
-    norm_F_N = 1/np.sqrt(N)*F_N
+    norm_F_N = np.multiply(1/np.sqrt(N), F_N)
 
     # Print them to the desired precision
     print ("\nThe primitive {}th root of unity is w = {}+{}j, so the {}th Fourier matrix is\n\nF_{} =\n".format(N,np.round_(np.real(w),p),np.round_(np.imag(w),p),N,N))
