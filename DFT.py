@@ -1,5 +1,24 @@
 #from math import pi
 import numpy as np
+import matplotlib.pyplot as plt
+
+# This function turn two vectors into the graph
+def basis_expr(dimension, numbers, numbers_hat):
+    x = []
+    numbers_hat_real = np.array([numbers_hat[i].real for i in range(dimension)])
+    numbers_hat_imag = np.array([numbers_hat[i].imag for i in range(dimension)])
+    magnitude = []
+    for i in range(dimension):
+        magnitude.append(np.sqrt(numbers_hat_real[i]**2 + numbers_hat_imag[i]**2))
+    magnitude = np.array(magnitude)
+    figure, ((ax1, ax2),(ax3, ax4)) = plt.subplots(2,2)
+    for i in range(dimension):
+        x.append(i)
+    ax1.plot(x, numbers, 'ro')
+    ax2.plot(x, numbers_hat_real, 'ro')
+    ax3.plot(x, numbers_hat_imag, 'ro')
+    ax4.plot(x, magnitude, 'ro')
+    plt.show()
 
 # This function returns the primitive Nth root of unity w = e^(2pi*i/N)
 def prim_Nth_root(N):
@@ -12,19 +31,29 @@ def Fourier_matrix(N):
     w = prim_Nth_root(N)
     return [[w**(m*n) for m in range(N)] for n in range(N)]
 
+def Conjugate(matrix, N):
+    for i in range(N):
+        for j in range(N):
+            matrix[i][j] = matrix[i][j] - 2*matrix[i][j].imag * 1j
+    return matrix
+
 # Main
 if __name__ == "__main__":
     N = int(input("\nPlease input the desired dimension of the C-vector space: "))
-    p = int(input("\nPlease choose a desired printing precision: "))
+    # p = int(input("\nPlease choose a desired printing precision: "))
 
     # Pre-compute w, F_N, and the "normalized" Fourier matrix norm_F_N here (since we might use them a lot below)
     w = prim_Nth_root(N)
     F_N = Fourier_matrix(N)
-    norm_F_N = np.multiply(1/np.sqrt(N), F_N)
+    norm_F_N = Conjugate(np.multiply(1/np.sqrt(N), F_N), N)
 
     # Print them to the desired precision
-    print ("\nThe primitive {}th root of unity is w = {}+{}j, so the {}th Fourier matrix is\n\nF_{} =\n".format(N,np.round_(np.real(w),p),np.round_(np.imag(w),p),N,N))
-    print (np.round_(np.matrix(F_N),p))
+    # print ("\nThe primitive {}th root of unity is w = {}+{}j, so the {}th Fourier matrix is\n\nF_{} =\n".format(N,np.round_(np.real(w),p),np.round_(np.imag(w),p),N,N))
+    # print (np.round_(np.matrix(F_N),3))
+
+    random_vector_f = np.random.rand(N)
+    f_hat = random_vector_f.dot(norm_F_N)
+    basis_expr(N, random_vector_f, f_hat)
 
     # Try this:
     # 1) Use a random number generator to create and plot a random vector
