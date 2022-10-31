@@ -34,7 +34,7 @@ def Fourier_matrix(N):
 def Conjugate(matrix, N):
     for i in range(N):
         for j in range(N):
-            matrix[i][j] = matrix[i][j] - 2*matrix[i][j].imag * 1j
+            matrix[i][j] = matrix[i][j] - 2 * matrix[i][j].imag * 1j
     return matrix
 
 # Main
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     # print (np.round_(np.matrix(F_N),3))
 
     random_vector_f = np.random.rand(N)
-    f_hat = random_vector_f.dot(norm_F_N)
+    f_hat = norm_F_N.dot(random_vector_f)
     basis_expr(N, random_vector_f, f_hat)
 
     # Try this:
