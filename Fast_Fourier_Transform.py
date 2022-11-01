@@ -71,7 +71,7 @@ def FFT(x, N):
 
 # Main
 if __name__ == "__main__":
-    n = int(input("\nPlease input a number n (we'll study Fourier Transform in dimension 2 ** n: "))
+    n = int(input("\nPlease input a number n (we'll study Fourier Transform in dimension 2 ** n): "))
     N = 2 ** n
     # p = int(input("\nPlease choose a desired printing precision: "))
 
