@@ -3,23 +3,23 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # This function turn two vectors into the graph
-def basis_expr(dimension, numbers, numbers_hat):
+def basis_expr(N, numbers, numbers_hat):
     # DFT part
     x = []
-    numbers_hat_real = np.array([numbers_hat[i].real for i in range(dimension)])
-    numbers_hat_imag = np.array([numbers_hat[i].imag for i in range(dimension)])
+    numbers_hat_real = np.array([numbers_hat[i].real for i in range(N)])
+    numbers_hat_imag = np.array([numbers_hat[i].imag for i in range(N)])
     magnitude = []
-    for i in range(dimension):
+    for i in range(N):
         magnitude.append(np.sqrt(numbers_hat_real[i]**2 + numbers_hat_imag[i]**2))
     magnitude = np.array(magnitude)
 
     #FFT part
-    FFT_result = FFT(numbers, dimension)
-    FFT_real = np.array([FFT_result[i].real for i in range(dimension)])
-    FFT_imag = np.array([FFT_result[i].imag for i in range(dimension)])
+    FFT_result = FFT(numbers, N)
+    FFT_real = np.array([FFT_result[i].real for i in range(N)])
+    FFT_imag = np.array([FFT_result[i].imag for i in range(N)])
 
     figure, ((ax1, ax2),(ax3, ax4),(ax5, ax6)) = plt.subplots(3,2)
-    for i in range(dimension):
+    for i in range(N):
         x.append(i)
     ax1.plot(x, numbers, 'ro')
     ax3.plot(x, numbers_hat_real, 'ro')
