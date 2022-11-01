@@ -15,6 +15,8 @@ def basis_expr(N, numbers, numbers_hat):
 
     #FFT part
     FFT_result = FFT(numbers, N)
+    for i in range(N):
+        FFT_result[i] /= np.sqrt(N)
     FFT_real = np.array([FFT_result[i].real for i in range(N)])
     FFT_imag = np.array([FFT_result[i].imag for i in range(N)])
 
@@ -64,14 +66,16 @@ def FFT(x, N):
     for k in range(N//2):
         p = y[k]
         q = np.e ** (-2 * np.pi * 1j * k / N) * y[k + N//2]
-        y[k] = p + q
-        y[k + N//2] = p - q
+        y[k] = (p + q)
+        y[k + N//2] = (p - q)
     return y
 
 
 # Main
 if __name__ == "__main__":
     n = int(input("\nPlease input a number n (we'll study Fourier Transform in dimension 2 ** n): "))
+    while n > 10:
+        n = int(input("\nThe input is too big, please enter a number smaller than or equal to 10: "))
     N = 2 ** n
     # p = int(input("\nPlease choose a desired printing precision: "))
 
