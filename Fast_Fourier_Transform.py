@@ -50,19 +50,24 @@ def Conjugate(matrix, N):
 
 
 def FFT(x, N):
+    # N = 1 the Fourier matrix is [[1]], so we can directly return the number
     if N == 1:
         return x
+
+    # Split the entries into even and odd ones
     x1, x2 = [], []
     for i in range(N//2):
         x1.append(x[2 * i])
         x2.append(x[2 * i + 1])
 
+    # recursively do FFT on even and odd entries
     evenFFT = FFT(x1, N//2)
     oddFFT = FFT(x2, N//2)
 
     y = evenFFT
     y.extend(oddFFT)
 
+    # Get the resulting array
     for k in range(N//2):
         p = y[k]
         q = np.e ** (-2 * np.pi * 1j * k / N) * y[k + N//2]
