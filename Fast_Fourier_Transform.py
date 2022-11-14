@@ -94,15 +94,35 @@ def IFFT_step(twid, x, N):
         y[k] = (p + q)
         y[k + N_half] = (p - q)
     return y
-    
+
+    # x, y should be sequence of length N, with only first (N//2) entries filled
+    # Their convolution will be a sequence of length N, with only N-1 entries filled
+def normal_convolution(x, y, N):
+    convolution = []
+    for i in range(N - 1):
+        sum = 0
+        for j in range(i + 1):
+            sum += x[j] * y[i - j]
+        convolution.append(sum)
+    convolution.append(0)
+    return convolution
+
+def fast_convolution(x, y, N):
+    x_fft = FFT(x, N)
+    y_fft = FFT(y, N)
+    convolution_FFT = np.multiply(x_fft, y_fft)
+    convolution = IFFT(convolution_FFT, N)
+    convolution *= np.sqrt(N)
+    return convolution
+
 # This function turn two vectors into the graph
-def basis_expr(N, numbers, DFT_numbers):
+def basis_expr(N, numbers1, numbers2):
     x = [i for i in range(N)]
     #FFT_numbers_magnitude = np.array([np.abs(FFT_numbers[i]) for i in range(N)])
-    DFT_numbers_magnitude = np.array([np.abs(DFT_numbers[i]) for i in range(N)])
+    #DFT_numbers_magnitude = np.array([np.abs(DFT_numbers[i]) for i in range(N)])
     figure, ((ax1, ax2)) = plt.subplots(1,2)
-    ax1.plot(x, numbers, 'ro')
-    ax2.plot(x, DFT_numbers_magnitude, 'ro')
+    ax1.plot(x, numbers1, 'ro')
+    ax2.plot(x, numbers2, 'ro')
     plt.show()
 
 # Main
@@ -111,6 +131,18 @@ if __name__ == "__main__":
     while n > 10:
         n = int(input("\nThe input is too big, please enter a number smaller than or equal to 10: "))
     N = 2 ** n
-    f = np.random.rand(N)
+    x = np.random.rand(N // 2)
+    y = np.random.rand(N // 2)
+    temp = np.array([0] * (N//2))
+    x = np.append(x, temp)
+    y = np.append(y, temp)
+    normal_convolution_result = normal_convolution(x, y, N)
+    fast_convolution_result = fast_convolution(x, y, N)
+    print(x)
+    print(y)
+
+    # f = np.random.rand(N)
+
     #f = [np.cos(np.pi*k/N) for k in range(N)]
-    basis_expr(N, f, IFFT(FFT(f, N), N))
+    basis_expr(N, normal_convolution_result, fast_convolution_result)
+    # basis_expr(N, f, IFFT(FFT(f, N), N))
