@@ -99,12 +99,11 @@ def IFFT_step(twid, x, N):
     # Their convolution will be a sequence of length N, with only N-1 entries filled
 def normal_convolution(x, y, N):
     convolution = []
-    for i in range(N - 1):
+    for i in range(N):
         sum = 0
-        for j in range(i + 1):
-            sum += x[j] * y[i - j]
+        for j in range(N):
+            sum += x[j] * y[(i - j) % N]
         convolution.append(sum)
-    convolution.append(0)
     return convolution
 
 def fast_convolution(x, y, N):
@@ -131,11 +130,8 @@ if __name__ == "__main__":
     while n > 10:
         n = int(input("\nThe input is too big, please enter a number smaller than or equal to 10: "))
     N = 2 ** n
-    x = np.random.rand(N // 2)
-    y = np.random.rand(N // 2)
-    temp = np.array([0] * (N//2))
-    x = np.append(x, temp)
-    y = np.append(y, temp)
+    x = np.random.rand(N)
+    y = np.random.rand(N)
     normal_convolution_result = normal_convolution(x, y, N)
     fast_convolution_result = fast_convolution(x, y, N)
     print(x)
