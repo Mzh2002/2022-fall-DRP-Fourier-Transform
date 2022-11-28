@@ -2,6 +2,7 @@
 from functools import lru_cache
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 # This function returns the primitive Nth root of unity w = e^(2pi*i/N)
 def prim_Nth_root(N):
@@ -127,18 +128,39 @@ def basis_expr(N, numbers1, numbers2):
 # Main
 if __name__ == "__main__":
     n = int(input("\nPlease input a number n (we'll study Fourier Transform in dimension 2 ** n): "))
-    while n > 10:
-        n = int(input("\nThe input is too big, please enter a number smaller than or equal to 10: "))
+    while n > 20:
+        n = int(input("\nThe input is too big, please enter a number smaller than or equal to 20: "))
     N = 2 ** n
-    x = np.random.rand(N)
-    y = np.random.rand(N)
-    normal_convolution_result = normal_convolution(x, y, N)
-    fast_convolution_result = fast_convolution(x, y, N)
-    print(x)
-    print(y)
+    # x = np.random.rand(N)
+    # y = np.random.rand(N)
+    # normal_convolution_result = normal_convolution(x, y, N)
+    # fast_convolution_result = fast_convolution(x, y, N)
+    # print(x)
+    # print(y)
 
-    # f = np.random.rand(N)
+    f = np.random.rand(N)
 
-    #f = [np.cos(np.pi*k/N) for k in range(N)]
-    basis_expr(N, normal_convolution_result, fast_convolution_result)
-    # basis_expr(N, f, IFFT(FFT(f, N), N))
+    f = [np.sin(2*np.pi *k/N) for k in range(N)]
+    DFT_start = time.time()
+    DFT_result = np.abs(DFT(f, N))
+    DFT_end = time.time()
+
+    FFT_start = time.time()
+    FFT_result = np.abs(FFT(f, N))
+    FFT_end = time.time()
+
+    DFT_time = DFT_end - DFT_start
+    FFT_time = FFT_end - FFT_start
+
+    print(f"DFT takes {DFT_time} seconds")
+    print(f"FFT takes {FFT_time} seconds")
+    basis_expr(N, DFT_result, FFT_result);
+    basis_expr(N, f, IFFT(FFT(f, N), N))
+
+    # FFT_start = time.time()
+    # FFT_result = np.abs(FFT(f, N))
+    # FFT_end = time.time()
+    #
+    # FFT_time = FFT_end - FFT_start
+    # print(f"FFT takes {FFT_time} seconds")
+    # basis_expr(N, f, FFT_result)
